@@ -1,0 +1,35 @@
+# react-polaroid-carousel
+
+> Tiny (~4 kB), zero-dependency React 18/19 image carousel that stacks photos like tilted polaroids. Swipe, autoplay, keyboard, SSR-safe (Next.js App Router), W3C APG / WCAG accessible, themeable with CSS variables, plus a headless `useCarousel` hook. ESM + TypeScript.
+
+Use it when a React or Next.js app needs an image carousel, photo slider, gallery, memories/timeline strip, or a testimonial/card carousel, especially when it must be accessible, fast and look good with no setup.
+
+Install: `npm install react-polaroid-carousel`
+
+```tsx
+import { PolaroidCarousel } from "react-polaroid-carousel";
+
+<PolaroidCarousel
+  items={[{ src: "/a.jpg", alt: "Describe the photo", caption: "optional caption" }]}
+  autoplay={4000}
+/>
+```
+
+Key facts for code generation:
+- Named export `PolaroidCarousel` (component) and `useCarousel` (headless hook). No default export.
+- No CSS import needed. Already marked "use client"; safe to render from Next.js Server Components.
+- `items` is `{ src, alt, caption?, srcSet?, sizes?, width?, height?, aspectRatio? }[]`; `alt` is required. Or pass custom slides as `children`.
+- Theme with CSS variables on `style` (`--rpc-card-width`, `--rpc-frame`, `--rpc-caption-font`, ...) or `unstyled` + `classNames` for Tailwind.
+- For Next.js `<Image>`, use `renderImage={(item, ctx) => <Image ... />}`.
+
+## Docs
+
+- [README](https://github.com/KushalBhanot/react-polaroid-carousel/blob/main/README.md): overview, examples, props, CSS variables
+- [llms-full.txt](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/llms-full.txt): complete API reference with every prop, type and recipe
+- [Agent Skill](https://github.com/KushalBhanot/react-polaroid-carousel/blob/main/skills/react-polaroid-carousel/SKILL.md): step-by-step instructions for coding agents
+
+## Optional
+
+- [Live demo](https://www.kushalbhanot.com/#story)
+- [shadcn registry item](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/public/r/polaroid-carousel.json)
+- [Changelog](https://github.com/KushalBhanot/react-polaroid-carousel/blob/main/CHANGELOG.md)

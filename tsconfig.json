@@ -1,0 +1,18 @@
+{
+  // Library settings from the TypeScript handbook ("Choosing Compiler Options").
+  "compilerOptions": {
+    "module": "node18",
+    "target": "es2020",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false,
+    "verbatimModuleSyntax": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "include": ["src", "test", "vitest.config.ts"]
+}

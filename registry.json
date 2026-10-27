@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "react-polaroid-carousel",
+  "homepage": "https://github.com/KushalBhanot/react-polaroid-carousel",
+  "items": [
+    {
+      "name": "polaroid-carousel",
+      "type": "registry:component",
+      "title": "Polaroid Carousel",
+      "description": "Accessible, swipeable image carousel that stacks photos like tilted polaroids. Autoplay, keyboard, SSR-safe, themed with your shadcn colors.",
+      "dependencies": ["react-polaroid-carousel"],
+      "files": [
+        {
+          "path": "registry/polaroid-carousel.tsx",
+          "type": "registry:component",
+          "target": "components/polaroid-carousel.tsx"
+        }
+      ],
+      "categories": ["carousel", "gallery", "media"]
+    }
+  ]
+}

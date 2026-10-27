@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "polaroid-carousel",
+  "title": "Polaroid Carousel",
+  "description": "Accessible, swipeable image carousel that stacks photos like tilted polaroids. Autoplay, keyboard, SSR-safe, themed with your shadcn colors.",
+  "dependencies": [
+    "react-polaroid-carousel"
+  ],
+  "files": [
+    {
+      "path": "registry/polaroid-carousel.tsx",
+      "content": "\"use client\";\n\nimport type { CSSProperties } from \"react\";\nimport { PolaroidCarousel, type PolaroidCarouselProps } from \"react-polaroid-carousel\";\n\n/**\n * react-polaroid-carousel, pre-themed with your shadcn/ui tokens.\n * Edit freely: every prop of <PolaroidCarousel> is available.\n * Docs: https://github.com/KushalBhanot/react-polaroid-carousel\n */\nexport function Polaroids({ className, style, ...props }: PolaroidCarouselProps) {\n  return (\n    <PolaroidCarousel\n      className={[\"text-foreground\", className].filter(Boolean).join(\" \")}\n      style={\n        {\n          \"--rpc-frame\": \"var(--card)\",\n          \"--rpc-caption-color\": \"var(--card-foreground)\",\n          \"--rpc-button-bg\": \"var(--secondary)\",\n          \"--rpc-button-color\": \"var(--secondary-foreground)\",\n          \"--rpc-radius\": \"var(--radius)\",\n          ...style,\n        } as CSSProperties\n      }\n      {...props}\n    />\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/polaroid-carousel.tsx"
+    }
+  ],
+  "categories": [
+    "carousel",
+    "gallery",
+    "media"
+  ],
+  "type": "registry:component"
+}

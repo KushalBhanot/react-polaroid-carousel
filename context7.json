@@ -1,0 +1,13 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "react-polaroid-carousel",
+  "description": "Tiny, zero-dependency, accessible React image carousel that stacks photos like tilted polaroids, with a headless useCarousel hook.",
+  "excludeFolders": ["test", "scripts", "node_modules", "dist", "public"],
+  "excludeFiles": ["CHANGELOG.md", "llms-full.txt"],
+  "rules": [
+    "Import the named export: import { PolaroidCarousel } from \"react-polaroid-carousel\". There is no default export.",
+    "No CSS import is needed; the component is already a client component and can be rendered from Next.js Server Components.",
+    "Every item needs a meaningful alt. Use renderImage for Next.js <Image>.",
+    "Theme with CSS variables (--rpc-card-width, --rpc-frame, --rpc-caption-font) or unstyled + classNames; do not wrap it in a fixed-height box."
+  ]
+}

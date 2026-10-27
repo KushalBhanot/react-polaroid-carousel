@@ -1,0 +1,84 @@
+{
+  "name": "react-polaroid-carousel",
+  "version": "0.1.0",
+  "description": "A tiny, zero-dependency React carousel that stacks photos like tilted polaroids. Swipe, autoplay, keyboard, SSR-safe (Next.js), WCAG/APG accessible, fully themeable, plus a headless useCarousel hook.",
+  "keywords": [
+    "react",
+    "carousel",
+    "react-carousel",
+    "slider",
+    "image-carousel",
+    "photo-carousel",
+    "image-slider",
+    "gallery",
+    "polaroid",
+    "swipe",
+    "autoplay",
+    "accessible",
+    "a11y",
+    "headless",
+    "nextjs",
+    "ssr",
+    "typescript",
+    "zero-dependency"
+  ],
+  "homepage": "https://github.com/KushalBhanot/react-polaroid-carousel#readme",
+  "bugs": "https://github.com/KushalBhanot/react-polaroid-carousel/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KushalBhanot/react-polaroid-carousel.git"
+  },
+  "license": "MIT",
+  "author": "Kushal Bhanot (https://www.kushalbhanot.com)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "llms.txt",
+    "llms-full.txt",
+    "skills"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node scripts/build-llms.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "size": "node scripts/size.mjs",
+    "registry": "shadcn build",
+    "check": "publint && attw --pack . --profile esm-only",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run size && npm run check",
+    "prepublishOnly": "npm run verify"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@eslint/js": "^10.0.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "jsdom": "^30.1.3",
+    "publint": "^0.3.25",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "shadcn": "^4.23.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^3.2.7"
+  }
+}
