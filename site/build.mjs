@@ -11,7 +11,10 @@ const out = join(here, "dist");
 const serve = process.argv.includes("--serve");
 
 // The demo always uses the library source in this repo, not the published build.
-const alias = { "react-polaroid-carousel": join(here, "../src/index.ts") };
+const alias = {
+  "react-polaroid-carousel/lightbox": join(here, "../src/lightbox.tsx"),
+  "react-polaroid-carousel": join(here, "../src/index.ts"),
+};
 const shared = { bundle: true, alias, jsx: "automatic", logLevel: "warning", define: { "process.env.NODE_ENV": '"production"' } };
 
 async function prerender() {

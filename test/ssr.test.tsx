@@ -23,3 +23,12 @@ it("produces identical HTML on every render", () => {
   const b = renderToString(<PolaroidCarousel items={items} autoplay tilt={6} />);
   expect(a).toBe(b);
 });
+
+it("renders a closed lightbox and video items on the server", async () => {
+  const { PolaroidLightbox } = await import("../src/lightbox.js");
+  const html = renderToString(<PolaroidLightbox items={items} index={0} open={false} onClose={() => {}} />);
+  expect(html).toContain("<dialog");
+  expect(html).not.toContain(" open");
+  const video = renderToString(<PolaroidCarousel items={[{ src: "/v.mp4", alt: "Waves", type: "video", poster: "/v.jpg" }]} />);
+  expect(video).toContain("<video");
+});

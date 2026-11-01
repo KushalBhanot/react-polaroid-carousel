@@ -19,6 +19,8 @@ import { PolaroidCarousel } from "react-polaroid-carousel";
 
 Key facts for code generation:
 - Named export `PolaroidCarousel` (component) and `useCarousel` (headless hook). No default export.
+- Full-screen viewer: `import { PolaroidLightbox } from "react-polaroid-carousel/lightbox"`; pair it with the carousel via a shared controlled `index` and `onSlideClick={() => setOpen(true)}`.
+- Video slides: items with `type: "video"`, `src` (mp4/webm) and `poster`; only the active one plays, muted and looping.
 - No CSS import needed. Already marked "use client"; safe to render from Next.js Server Components.
 - `items` is `{ src, alt, caption?, srcSet?, sizes?, width?, height?, aspectRatio? }[]`; `alt` is required. Or pass custom slides as `children`.
 - Theme with CSS variables on `style` (`--rpc-card-width`, `--rpc-frame`, `--rpc-caption-font`, ...) or `unstyled` + `classNames` for Tailwind.

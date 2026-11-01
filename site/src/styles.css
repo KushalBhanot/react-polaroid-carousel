@@ -39,6 +39,7 @@ a:hover { color: var(--accent); }
 
 .hero {
   max-width: 1120px;
+  grid-template-columns: minmax(0, 1fr);
   margin: 0 auto;
   padding: 72px 16px 40px;
   display: grid;
@@ -47,7 +48,7 @@ a:hover { color: var(--accent); }
 }
 
 @media (min-width: 900px) {
-  .hero { grid-template-columns: 1.05fr 1fr; padding-top: 96px; }
+  .hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); padding-top: 96px; }
 }
 
 .eyebrow {
@@ -109,6 +110,7 @@ h1 {
 
 .example {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 28px;
   align-items: center;
   padding: 40px 0;
@@ -116,7 +118,7 @@ h1 {
 }
 
 @media (min-width: 900px) {
-  .example { grid-template-columns: 1fr 1fr; gap: 48px; }
+  .example { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; }
   .example:nth-of-type(even) .example-text { order: 2; }
 }
 
@@ -191,8 +193,6 @@ pre {
 .quote footer img { border-radius: 50%; object-fit: cover; }
 .quote footer strong { display: block; color: var(--ink); }
 
-/* Video reels */
-.clip { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: #000; }
 
 /* Headless stories */
 .stories { position: relative; max-width: 300px; margin: 16px auto; }

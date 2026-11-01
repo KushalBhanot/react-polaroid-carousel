@@ -212,4 +212,56 @@ describe("PolaroidCarousel", () => {
     expect(screen.getByRole("button", { name: "Ir a 2" })).toBeTruthy();
     expect(activeLabel()).toBe("1 de 4");
   });
+
+  describe("onSlideClick", () => {
+    it("adds one accessible button over the active slide", () => {
+      const onSlideClick = vi.fn();
+      render(<PolaroidCarousel items={items} onSlideClick={onSlideClick} />);
+      expect(screen.getAllByRole("button", { name: /^Open slide/ })).toHaveLength(1);
+      fireEvent.click(screen.getByRole("button", { name: "Open slide 1" }));
+      expect(onSlideClick).toHaveBeenCalledWith(0);
+      fireEvent.click(screen.getByRole("button", { name: "Go to slide 3" }));
+      fireEvent.click(screen.getByRole("button", { name: "Open slide 3" }));
+      expect(onSlideClick).toHaveBeenLastCalledWith(2);
+    });
+
+    it("stops autoplay when the active slide is opened", () => {
+      vi.useFakeTimers();
+      render(<PolaroidCarousel items={items} autoplay={1000} onSlideClick={() => {}} />);
+      fireEvent.click(screen.getByRole("button", { name: "Open slide 1" }));
+      act(() => vi.advanceTimersByTime(3000));
+      expect(activeLabel()).toBe("1 of 4");
+    });
+
+    it("adds nothing when not set", () => {
+      render(<PolaroidCarousel items={items} />);
+      expect(screen.queryByRole("button", { name: /^Open slide/ })).toBeNull();
+    });
+  });
+
+  describe("video items", () => {
+    const clips: PolaroidItem[] = [
+      { src: "/a.mp4", alt: "Waves", type: "video", poster: "/a.jpg" },
+      { src: "/b.mp4", alt: "Coffee", type: "video", poster: "/b.jpg" },
+      { src: "/c.mp4", alt: "Forest", type: "video", poster: "/c.jpg" },
+    ];
+
+    it("plays only the active clip, muted with controls, and shows posters elsewhere", () => {
+      render(<PolaroidCarousel items={clips} />);
+      const videos = document.querySelectorAll("video");
+      expect(videos).toHaveLength(1);
+      const video = videos[0] as HTMLVideoElement;
+      expect(video.getAttribute("src")).toBe("/a.mp4");
+      expect(video.muted).toBe(true);
+      expect(video.hasAttribute("controls")).toBe(true);
+      expect(video.autoplay).toBe(true);
+      expect(screen.getByRole("img", { name: "Coffee", hidden: true }).getAttribute("src")).toBe("/b.jpg");
+    });
+
+    it("does not autoplay with reduced motion", () => {
+      reducedMotion = true;
+      render(<PolaroidCarousel items={clips} />);
+      expect((document.querySelector("video") as HTMLVideoElement).autoplay).toBe(false);
+    });
+  });
 });

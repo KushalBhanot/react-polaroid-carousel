@@ -9,7 +9,7 @@
 [![types included](https://img.shields.io/npm/types/react-polaroid-carousel)](./src/index.ts)
 [![license](https://img.shields.io/npm/l/react-polaroid-carousel)](./LICENSE)
 
-**[Live demo and 8 examples →](https://kushalbhanot.github.io/react-polaroid-carousel/)**
+**[Live demo and 8 examples, including the new lightbox →](https://kushalbhanot.github.io/react-polaroid-carousel/)**
 
 - **~4 kB** min+gzip, **zero dependencies** (just React 18 or 19)
 - **SSR-safe**: identical HTML on server and client, no layout shift, works in Next.js App Router, Remix, Astro
@@ -46,10 +46,10 @@ One component, many looks. Every example below is live (with its code) on the [d
 
 | | |
 | --- | --- |
-| [![Travel memories: tilted polaroids with handwritten captions](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/travel.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#travel)<br>**Travel memories**: the default scrapbook look, autoplay and captions | [![Product gallery: straight frameless cards with name and price](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/product.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#product)<br>**Product gallery**: `frame="none"`, no tilt, price synced via `onIndexChange` |
+| [![Travel memories: tilted polaroids with handwritten captions](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/travel.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#travel)<br>**Travel memories + lightbox**: the default scrapbook look; tap to view full screen | [![Product gallery: straight frameless cards with name and price](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/product.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#product)<br>**Product gallery**: `frame="none"`, no tilt, price synced via `onIndexChange` |
 | [![Wedding timeline: cream polaroids fanned out with dates](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/story.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#story)<br>**Wedding & "our story" timelines**: cream frames, handwriting font, two cards each side | [![Real estate: wide room photos with labels and arrows](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/real-estate.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#real-estate)<br>**Real estate tours**: 4:3 photos and room labels with `renderSlide` |
 | [![Recipe steps: numbered polaroids that stop at the ends](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/recipe.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#recipe)<br>**Recipe & tutorial steps**: `loop={false}` so arrows stop at the ends | [![Testimonials: quote cards with avatars](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/testimonials.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#testimonials)<br>**Testimonials**: any `children` become slides |
-| [![Video reels: vertical clips in polaroid frames](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/video.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#video)<br>**Video reels**: only the active card plays, others show a poster | [![Instagram-style stories built with the headless hook](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/headless.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#headless)<br>**Stories UI**: build your own markup with the headless `useCarousel` hook |
+| [![Video reels: vertical clips in polaroid frames](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/video.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#video)<br>**Video reels**: `type: "video"` items; only the active card plays | [![Instagram-style stories built with the headless hook](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/headless.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#headless)<br>**Stories UI**: build your own markup with the headless `useCarousel` hook |
 
 <sub>Demo photos from [Unsplash](https://unsplash.com/license) and videos from [Pexels](https://www.pexels.com/license/). [Credits](./site/CREDITS.md).</sub>
 
@@ -76,6 +76,36 @@ Popular carousels keep getting the same bug reports. This one is designed so the
 ```
 
 Autoplay pauses on hover, when the tab is hidden and when the carousel is scrolled off screen. It stops after the user swipes, presses a key or clicks a dot, and shows a pause/play button (required for accessibility). It starts paused if the user prefers reduced motion.
+
+### Lightbox (tap to view full screen)
+
+[![The lightbox: a photo shown full screen with its caption, a close button and previous / next buttons](https://raw.githubusercontent.com/KushalBhanot/react-polaroid-carousel/main/media/examples/lightbox.jpg)](https://kushalbhanot.github.io/react-polaroid-carousel/#travel)
+
+```tsx
+import { PolaroidLightbox } from "react-polaroid-carousel/lightbox";
+
+const [index, setIndex] = useState(0);
+const [open, setOpen] = useState(false);
+
+<PolaroidCarousel items={items} index={index} onIndexChange={setIndex} onSlideClick={() => setOpen(true)} />
+<PolaroidLightbox items={items} index={index} onIndexChange={setIndex} open={open} onClose={() => setOpen(false)} />
+```
+
+`onSlideClick` puts a real button over the active card, so it works with Enter and Space too, and a swipe never triggers it. The lightbox is a separate entry (about 0.8 kB more when used with the carousel) built on the native `<dialog>`: focus is trapped inside, Esc closes it, focus returns to the card, and the page stops scrolling behind it. Swipe or use the arrow keys to move through photos; sharing `index` keeps the carousel on the photo you closed at.
+
+### Video slides
+
+```tsx
+<PolaroidCarousel
+  items={[
+    { type: "video", src: "/waves.mp4", poster: "/waves.jpg", alt: "Waves breaking", caption: "salt air" },
+    { type: "video", src: "/coffee.mp4", poster: "/coffee.jpg", alt: "Coffee being poured" },
+  ]}
+  style={{ "--rpc-aspect": "9 / 16" } as React.CSSProperties}
+/>
+```
+
+Only the active card loads and plays its clip (muted, looping, inline); the others show their `poster`, so a page full of clips stays light. Native controls keep the video pausable (WCAG 2.2.2), and it won't autoplay when the user prefers reduced motion. Mix photos and videos freely.
 
 ### Next.js `<Image>`
 
@@ -158,7 +188,7 @@ Everything is optional except `items` (or `children`).
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `PolaroidItem[]` | | `{ src, alt, caption?, srcSet?, sizes?, width?, height?, aspectRatio? }` |
+| `items` | `PolaroidItem[]` | | `{ src, alt, caption?, srcSet?, sizes?, width?, height?, aspectRatio?, type?: "image" \| "video", poster? }` |
 | `children` | `ReactNode` | | Custom slides (one per child), instead of `items` |
 | `label` | `string` | `"Photo carousel"` | Accessible name of the carousel |
 | `autoplay` | `boolean \| number` | `false` | `true` = 4000ms, or a delay in ms |
@@ -182,14 +212,30 @@ Everything is optional except `items` (or `children`).
 | `reducedMotion` | `"user" \| "always" \| "never"` | `"user"` | Follow the OS setting or force it |
 | `priority` | `boolean` | `false` | Eager, high-priority active image (above the fold) |
 | `duration` / `easing` | `number` / `string` | `600` / spring-like | Transition timing |
+| `onSlideClick` | `(index) => void` | | Active card was clicked or activated (e.g. open the lightbox) |
 | `renderImage` | `(item, ctx) => ReactNode` | | Replace the `<img>` |
 | `renderSlide` | `(item, ctx) => ReactNode` | | Replace a slide's contents |
 | `unstyled` | `boolean` | `false` | Keep layout + motion, drop visual styles |
 | `className` / `style` | | | Root element |
-| `classNames` | `{ root, stage, slide, frame, image, caption, dots, dot, arrow, rotationButton }` | | Class names for each part |
+| `classNames` | `{ root, stage, slide, frame, image, caption, dots, dot, arrow, rotationButton, openButton }` | | Class names for each part |
 | `labels` | `Partial<PolaroidCarouselLabels>` | English | Override any text (i18n) |
 
 `ctx` is `{ index, offset, active, visible, loading }`.
+
+### `PolaroidLightbox` props
+
+Import from `react-polaroid-carousel/lightbox`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `PolaroidItem[]` | | The same items as the carousel |
+| `open` | `boolean` | | Show the lightbox |
+| `onClose` | `() => void` | | Close button, Esc, or a click on the backdrop |
+| `index` / `onIndexChange` | `number` / `(index) => void` | | Current photo; share it with the carousel |
+| `loop` | `boolean` | `true` | Wrap around at the ends |
+| `renderImage` | `(item, { index }) => ReactNode` | | Replace the full-size `<img>` / `<video>` |
+| `className` / `style` | | | The `<dialog>` element |
+| `labels` | `Partial<PolaroidLightboxLabels>` | English | `dialog`, `close`, `previous`, `next`, `position` |
 
 ## CSS variables
 
@@ -207,6 +253,7 @@ Everything is optional except `items` (or `children`).
 | `--rpc-dot` | `currentColor` |
 | `--rpc-button-bg` / `--rpc-button-color` | translucent black / white |
 | `--rpc-stage-padding` | `28px 0 36px` |
+| `--rpc-lightbox-bg` | near-black, 97% opaque (lightbox) |
 
 ## Accessibility
 

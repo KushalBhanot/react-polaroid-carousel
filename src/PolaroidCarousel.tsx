@@ -27,6 +27,10 @@ export interface PolaroidItem {
   height?: number;
   /** Crop this photo to its own aspect ratio, e.g. "4 / 3" for a wide shot. Defaults to `--rpc-aspect` (square). */
   aspectRatio?: string;
+  /** "video" plays `src` as a muted, looping clip while its slide is active and shows `poster` otherwise. @default "image" */
+  type?: "image" | "video";
+  /** Still image for a video item: shown while the slide is inactive and before the clip loads. */
+  poster?: string;
 }
 
 /** Passed to `renderImage` and `renderSlide`. */
@@ -53,7 +57,8 @@ export type PolaroidCarouselSlot =
   | "dots"
   | "dot"
   | "arrow"
-  | "rotationButton";
+  | "rotationButton"
+  | "openButton";
 
 export interface PolaroidCarouselLabels {
   carousel: string;
@@ -63,6 +68,8 @@ export interface PolaroidCarouselLabels {
   next: string;
   pause: string;
   play: string;
+  /** Name of the button over the active slide when `onSlideClick` is set. */
+  open: (position: number, total: number) => string;
 }
 
 export interface PolaroidCarouselProps extends Omit<UseCarouselOptions, "count" | "onDragMove"> {
@@ -96,6 +103,11 @@ export interface PolaroidCarouselProps extends Omit<UseCarouselOptions, "count" 
   easing?: string;
   /** Replace the `<img>` (e.g. with Next.js `<Image>`). */
   renderImage?: (item: PolaroidItem, context: SlideContext) => ReactNode;
+  /**
+   * Called when the active slide is clicked, or activated with Enter / Space (e.g. to open
+   * `PolaroidLightbox`). Adds an accessible button over the active slide. A swipe never triggers it.
+   */
+  onSlideClick?: (index: number) => void;
   /** Replace a whole slide's contents (frame included unless `frame="none"`). */
   renderSlide?: (item: PolaroidItem, context: SlideContext) => ReactNode;
   /** Drop all visual styling (colors, frame, shadows, fonts), keep only layout and motion. */
@@ -116,6 +128,7 @@ const DEFAULT_LABELS: PolaroidCarouselLabels = {
   next: "Next slide",
   pause: "Pause slide rotation",
   play: "Start slide rotation",
+  open: (position) => `Open slide ${position}`,
 };
 
 // React 19 takes boolean `inert` / camelCase `fetchPriority`; React 18 needs the
@@ -163,6 +176,7 @@ export function PolaroidCarousel(props: PolaroidCarouselProps): ReactElement {
     easing = "cubic-bezier(0.22, 1, 0.36, 1)",
     renderImage,
     renderSlide,
+    onSlideClick,
     unstyled = false,
     className,
     style,
@@ -189,14 +203,26 @@ export function PolaroidCarousel(props: PolaroidCarouselProps): ReactElement {
   const { rootRef, ...carousel } = useCarousel({ ...carouselOptions, direction, count, onDragMove });
   const { index, reducedMotion, isDragging } = carousel;
 
+  const stopRotation = () => {
+    if (carousel.hasAutoplay && props.stopOnInteraction !== false && carousel.isRotationOn) carousel.toggleRotation();
+  };
   const userGoTo = (target: number) => {
     carousel.goTo(target);
-    if (carousel.hasAutoplay && props.stopOnInteraction !== false && carousel.isRotationOn) carousel.toggleRotation();
+    stopRotation();
   };
 
   const forward = direction === "rtl" ? -1 : 1;
   const transition =
     reducedMotion ? "none" : `transform ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
+
+  const mediaStyle = (item: PolaroidItem): CSSProperties => ({
+    display: "block",
+    width: "100%",
+    aspectRatio: item.aspectRatio ?? "var(--rpc-aspect, 1)",
+    objectFit: "cover",
+    height: "auto",
+    ...(unstyled ? {} : { borderRadius: frame === "polaroid" ? 2 : "var(--rpc-radius, 16px)" }),
+  });
 
   const slides = [];
   for (let i = 0; i < count; i++) {
@@ -228,11 +254,26 @@ export function PolaroidCarousel(props: PolaroidCarouselProps): ReactElement {
         <>
           {renderImage ? (
             renderImage(item, context)
+          ) : item.type === "video" && active ? (
+            // Native controls keep moving content pausable (WCAG 2.2.2); reduced motion skips autoplay.
+            <video
+              key={item.src}
+              src={item.src}
+              poster={item.poster}
+              aria-label={item.alt}
+              autoPlay={!reducedMotion}
+              muted
+              loop
+              playsInline
+              controls
+              className={classNames.image}
+              style={mediaStyle(item)}
+            />
           ) : (
             <img
-              src={item.src}
+              src={item.type === "video" ? (item.poster ?? "") : item.src}
               alt={item.alt}
-              srcSet={item.srcSet}
+              srcSet={item.type === "video" ? undefined : item.srcSet}
               sizes={item.sizes}
               width={item.width}
               height={item.height}
@@ -240,14 +281,7 @@ export function PolaroidCarousel(props: PolaroidCarouselProps): ReactElement {
               decoding="async"
               draggable={false}
               className={classNames.image}
-              style={{
-                display: "block",
-                width: "100%",
-                aspectRatio: item.aspectRatio ?? "var(--rpc-aspect, 1)",
-                objectFit: "cover",
-                height: "auto",
-                ...(unstyled ? {} : { borderRadius: frame === "polaroid" ? 2 : "var(--rpc-radius, 16px)" }),
-              }}
+              style={mediaStyle(item)}
               {...(priority && active ? highPriority : {})}
             />
           )}
@@ -299,6 +333,7 @@ export function PolaroidCarousel(props: PolaroidCarouselProps): ReactElement {
         onClick={active ? undefined : () => userGoTo(i)}
         style={{
           gridArea: "1 / 1",
+          position: "relative",
           width: "var(--rpc-card-width, min(60%, 260px))",
           boxSizing: "border-box",
           transform,
@@ -317,6 +352,20 @@ export function PolaroidCarousel(props: PolaroidCarouselProps): ReactElement {
         <div className={classNames.frame} {...inertProps(!active)}>
           {content}
         </div>
+        {active && onSlideClick && (
+          <button
+            type="button"
+            className={classNames.openButton}
+            aria-label={labels.open(i + 1, count)}
+            data-rpc-open=""
+            onClick={() => {
+              // Opening a viewer is an interaction: don't let autoplay change the photo underneath it.
+              stopRotation();
+              onSlideClick(i);
+            }}
+            style={{ position: "absolute", inset: 0, padding: 0, border: 0, background: "transparent", cursor: "zoom-in", borderRadius: "inherit" }}
+          />
+        )}
       </div>,
     );
   }

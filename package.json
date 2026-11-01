@@ -1,6 +1,6 @@
 {
   "name": "react-polaroid-carousel",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A tiny (~4 kB), zero-dependency React carousel that stacks photos like tilted polaroids. Image slider, photo and product gallery, testimonials, video reels. Swipe, autoplay, SSR-safe (Next.js), WCAG accessible, themeable, plus a headless hook.",
   "keywords": [
     "react",
@@ -32,7 +32,10 @@
     "react-component",
     "react-19",
     "shadcn",
-    "llms-txt"
+    "llms-txt",
+    "lightbox",
+    "video-carousel",
+    "fullscreen"
   ],
   "homepage": "https://kushalbhanot.github.io/react-polaroid-carousel/",
   "bugs": "https://github.com/KushalBhanot/react-polaroid-carousel/issues",
@@ -47,6 +50,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./lightbox": {
+      "types": "./dist/lightbox.d.ts",
+      "default": "./dist/lightbox.js"
     },
     "./package.json": "./package.json"
   },

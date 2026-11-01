@@ -10,7 +10,10 @@
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "paths": { "react-polaroid-carousel": ["../src/index.ts"] }
+    "paths": {
+      "react-polaroid-carousel": ["../src/index.ts"],
+      "react-polaroid-carousel/lightbox": ["../src/lightbox.tsx"]
+    }
   },
   "include": ["src"]
 }

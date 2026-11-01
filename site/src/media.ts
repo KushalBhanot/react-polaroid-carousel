@@ -63,10 +63,10 @@ export const people = [
 ];
 
 export const clips = [
-  { src: "videos/waves.mp4", poster: "videos/waves.webp", alt: "Ocean waves breaking", caption: "salt air" },
-  { src: "videos/coffee.mp4", poster: "videos/coffee.webp", alt: "Coffee being poured into a mug", caption: "slow mornings" },
-  { src: "videos/forest.mp4", poster: "videos/forest.webp", alt: "Sunlight through trees in a misty meadow", caption: "golden hour" },
-  { src: "videos/surf.mp4", poster: "videos/surf.webp", alt: "Surfers waiting for waves on a calm sea", caption: "waiting for a set" },
+  { type: "video" as const, src: "videos/waves.mp4", poster: "videos/waves.webp", alt: "Ocean waves breaking", caption: "salt air" },
+  { type: "video" as const, src: "videos/coffee.mp4", poster: "videos/coffee.webp", alt: "Coffee being poured into a mug", caption: "slow mornings" },
+  { type: "video" as const, src: "videos/forest.mp4", poster: "videos/forest.webp", alt: "Sunlight through trees in a misty meadow", caption: "golden hour" },
+  { type: "video" as const, src: "videos/surf.mp4", poster: "videos/surf.webp", alt: "Surfers waiting for waves on a calm sea", caption: "waiting for a set" },
 ];
 
 // A mix of every use case for the hero.

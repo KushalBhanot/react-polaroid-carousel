@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org/).
 
+## 0.2.0
+
+- `PolaroidLightbox` (new entry, `react-polaroid-carousel/lightbox`): a full-screen viewer on the native `<dialog>` with focus trap, Esc to close, focus return, scroll lock, swipe and arrow keys. Adds about 0.8 kB when used with the carousel.
+- `onSlideClick` prop: an accessible button over the active card (works with Enter and Space; never fires after a swipe). New `openButton` class name slot and `open` label.
+- Video slides: items accept `type: "video"` and `poster`. Only the active card plays its clip, muted and looping, with native controls; reduced motion turns autoplay off.
+- Core bundle: 4.42 kB min+gzip.
+
 ## 0.1.1
 
 Docs and demo only; no changes to the library code.

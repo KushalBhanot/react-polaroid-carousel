@@ -1,18 +1,26 @@
-// Bundles the published entry the way an app would (minified, React external)
-// and fails if the gzipped size grows past the budget.
+// Bundles each published entry the way an app would (minified, React external)
+// and fails if its gzipped size grows past the budget.
 import { build } from "esbuild";
 import { gzipSync } from "node:zlib";
 
-const BUDGET_BYTES = 4.5 * 1024;
-const result = await build({
-  entryPoints: ["dist/index.js"],
-  bundle: true,
-  minify: true,
-  format: "esm",
-  external: ["react", "react/jsx-runtime"],
-  write: false,
-  logLevel: "silent",
-});
-const size = gzipSync(result.outputFiles[0].contents).length;
-console.log(`react-polaroid-carousel: ${(size / 1024).toFixed(2)} kB min+gzip (budget ${BUDGET_BYTES / 1024} kB)`);
-if (size > BUDGET_BYTES) process.exit(1);
+const budgets = [
+  { name: "react-polaroid-carousel", entry: "dist/index.js", kB: 4.5 },
+  { name: "react-polaroid-carousel/lightbox", entry: "dist/lightbox.js", kB: 3.25 },
+];
+
+let failed = false;
+for (const { name, entry, kB } of budgets) {
+  const result = await build({
+    entryPoints: [entry],
+    bundle: true,
+    minify: true,
+    format: "esm",
+    external: ["react", "react/jsx-runtime"],
+    write: false,
+    logLevel: "silent",
+  });
+  const size = gzipSync(result.outputFiles[0].contents).length;
+  console.log(`${name}: ${(size / 1024).toFixed(2)} kB min+gzip (budget ${kB} kB)`);
+  if (size > kB * 1024) failed = true;
+}
+if (failed) process.exit(1);

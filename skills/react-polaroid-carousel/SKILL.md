@@ -44,12 +44,15 @@ A ~4 kB, zero-dependency React 18/19 carousel. Photos stack like tilted polaroid
 | Tailwind-only styling | `unstyled` plus `classNames={{ slide, caption, dot, ... }}` |
 | Show more cards | `visible={2}`; straight stack: `tilt={0} fan={0}` |
 | Sync with other UI | controlled `index` + `onIndexChange` |
+| Tap to view full screen | `onSlideClick={() => setOpen(true)}` + `<PolaroidLightbox items index onIndexChange open onClose />` from `react-polaroid-carousel/lightbox`, sharing the controlled `index` |
+| Video clips | items with `type: "video"`, `src`, `poster` (only the active card plays; set `--rpc-aspect: 9 / 16` for reels) |
 | Fully custom markup | `useCarousel({ count })` hook: spread `rootProps` + `ref={rootRef}` on the wrapper and `swipeProps` on the swipe area |
-| Other languages | `labels={{ carousel, slide, goTo, previous, next, pause, play }}`, `direction="rtl"` |
+| Other languages | `labels={{ carousel, slide, goTo, previous, next, pause, play, open }}`, `direction="rtl"` |
 
 ## Gotchas
 
 - `items` must be stable between renders when possible (define outside the component or `useMemo`) to avoid needless work.
 - Do not wrap it in `overflow: hidden` containers that are narrower than the cards plus `spread`; side cards are meant to peek out and the stage already clips itself.
+- Don't attach your own `onClick` to slides to open a viewer; use `onSlideClick`, which is keyboard accessible and ignores swipes.
 - `alt=""` only for purely decorative images; captions are not a substitute for alt text.
 - Full API with every prop and type: see the `docs` URL in this skill's metadata, or `node_modules/react-polaroid-carousel/llms-full.txt`.

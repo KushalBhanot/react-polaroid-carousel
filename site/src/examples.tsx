@@ -1,5 +1,6 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 import { PolaroidCarousel, useCarousel } from "react-polaroid-carousel";
+import { PolaroidLightbox } from "react-polaroid-carousel/lightbox";
 import { clips, homes, people, products, recipe, story, travel } from "./media";
 
 export interface Example {
@@ -14,7 +15,21 @@ export interface Example {
 const vars = (v: Record<string, string>) => v as CSSProperties;
 
 function TravelDemo() {
-  return <PolaroidCarousel items={travel} autoplay={3500} label="Travel memories" priority />;
+  const [index, setIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <PolaroidCarousel
+        items={travel}
+        index={index}
+        onIndexChange={setIndex}
+        onSlideClick={() => setOpen(true)}
+        autoplay={3500}
+        label="Travel memories"
+      />
+      <PolaroidLightbox items={travel} index={index} onIndexChange={setIndex} open={open} onClose={() => setOpen(false)} />
+    </>
+  );
 }
 
 function ProductDemo() {
@@ -116,21 +131,7 @@ function TestimonialDemo() {
 }
 
 function ReelsDemo() {
-  return (
-    <PolaroidCarousel
-      items={clips}
-      label="Video clips"
-      style={vars({ "--rpc-aspect": "9 / 16", "--rpc-card-width": "min(46%, 220px)" })}
-      renderImage={(item, { active, loading }) => {
-        const poster = clips.find((c) => c.src === item.src)?.poster;
-        return active ? (
-          <video src={item.src} poster={poster} autoPlay muted loop playsInline aria-label={item.alt} className="clip" />
-        ) : (
-          <img src={poster} alt={item.alt} loading={loading} className="clip" />
-        );
-      }}
-    />
-  );
+  return <PolaroidCarousel items={clips} label="Video clips" style={vars({ "--rpc-aspect": "9 / 16", "--rpc-card-width": "min(46%, 220px)" })} />;
 }
 
 function StoriesDemo() {
@@ -167,18 +168,28 @@ function StoriesDemo() {
 export const examples: Example[] = [
   {
     id: "travel",
-    title: "Travel memories",
-    blurb: "The default look. Drop in photos with captions and it feels like a scrapbook. Autoplay pauses on hover and stops when someone swipes.",
-    tags: ["autoplay", "captions", "priority"],
+    title: "Travel memories + lightbox",
+    blurb: "The default scrapbook look. Tap the front photo to open it full screen; swipe or use the arrow keys inside, and Esc to close.",
+    tags: ["onSlideClick", "PolaroidLightbox", "autoplay"],
     Demo: TravelDemo,
-    code: `<PolaroidCarousel
-  items={[
-    { src: "/beach.webp", alt: "Waves at golden hour", caption: "first swim of summer" },
-    { src: "/lake.webp", alt: "Turquoise mountain lake", caption: "lake mornings" },
-    { src: "/van.webp", alt: "Camper van on a desert road", caption: "road trip!" },
-  ]}
+    code: `import { PolaroidLightbox } from "react-polaroid-carousel/lightbox";
+
+const [index, setIndex] = useState(0);
+const [open, setOpen] = useState(false);
+
+<PolaroidCarousel
+  items={photos}
+  index={index}
+  onIndexChange={setIndex}
+  onSlideClick={() => setOpen(true)}
   autoplay={3500}
-  priority
+/>
+<PolaroidLightbox
+  items={photos}
+  index={index}
+  onIndexChange={setIndex}
+  open={open}
+  onClose={() => setOpen(false)}
 />`,
   },
   {
@@ -272,17 +283,15 @@ export const examples: Example[] = [
   {
     id: "video",
     title: "Video reels",
-    blurb: "Only the active card plays; the rest show a poster image, so a page of clips stays light.",
-    tags: ["renderImage", "9 / 16", "<video>"],
+    blurb: "Built in: give an item type \"video\" and a poster. Only the active card plays (muted, looping); the rest show their poster, so a page of clips stays light.",
+    tags: ['type: "video"', "poster", "9 / 16"],
     Demo: ReelsDemo,
     code: `<PolaroidCarousel
-  items={clips}
+  items={[
+    { type: "video", src: "/waves.mp4", poster: "/waves.webp", alt: "Ocean waves", caption: "salt air" },
+    { type: "video", src: "/coffee.mp4", poster: "/coffee.webp", alt: "Coffee pour", caption: "slow mornings" },
+  ]}
   style={{ "--rpc-aspect": "9 / 16" }}
-  renderImage={(item, { active }) =>
-    active
-      ? <video src={item.src} poster={item.poster} autoPlay muted loop playsInline />
-      : <img src={item.poster} alt={item.alt} />
-  }
 />`,
   },
   {
