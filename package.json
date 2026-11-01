@@ -1,7 +1,7 @@
 {
   "name": "react-polaroid-carousel",
-  "version": "0.1.0",
-  "description": "A tiny, zero-dependency React carousel that stacks photos like tilted polaroids. Swipe, autoplay, keyboard, SSR-safe (Next.js), WCAG/APG accessible, fully themeable, plus a headless useCarousel hook.",
+  "version": "0.1.1",
+  "description": "A tiny (~4 kB), zero-dependency React carousel that stacks photos like tilted polaroids. Image slider, photo and product gallery, testimonials, video reels. Swipe, autoplay, SSR-safe (Next.js), WCAG accessible, themeable, plus a headless hook.",
   "keywords": [
     "react",
     "carousel",
@@ -20,9 +20,21 @@
     "nextjs",
     "ssr",
     "typescript",
-    "zero-dependency"
+    "zero-dependency",
+    "photo-gallery",
+    "image-gallery",
+    "product-gallery",
+    "slideshow",
+    "testimonials",
+    "stacked-cards",
+    "card-stack",
+    "scrapbook",
+    "react-component",
+    "react-19",
+    "shadcn",
+    "llms-txt"
   ],
-  "homepage": "https://github.com/KushalBhanot/react-polaroid-carousel#readme",
+  "homepage": "https://kushalbhanot.github.io/react-polaroid-carousel/",
   "bugs": "https://github.com/KushalBhanot/react-polaroid-carousel/issues",
   "repository": {
     "type": "git",
@@ -49,11 +61,13 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json && node scripts/build-llms.mjs",
-    "typecheck": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json && tsc -p site",
     "lint": "eslint .",
     "test": "vitest run",
     "size": "node scripts/size.mjs",
     "registry": "shadcn build",
+    "site:build": "node site/build.mjs",
+    "site:dev": "node site/build.mjs --serve",
     "check": "publint && attw --pack . --profile esm-only",
     "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run size && npm run check",
     "prepublishOnly": "npm run verify"

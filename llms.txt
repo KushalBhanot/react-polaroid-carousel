@@ -6,6 +6,8 @@ Use it when a React or Next.js app needs an image carousel, photo slider, galler
 
 Install: `npm install react-polaroid-carousel`
 
+Live examples with code (travel, product gallery, wedding timeline, real estate, recipe steps, testimonials, video reels, headless stories): https://kushalbhanot.github.io/react-polaroid-carousel/
+
 ```tsx
 import { PolaroidCarousel } from "react-polaroid-carousel";
 

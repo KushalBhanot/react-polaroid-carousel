@@ -1,0 +1,16 @@
+{
+  // Demo site only (bundled by esbuild); the library has its own config.
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "target": "es2020",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "paths": { "react-polaroid-carousel": ["../src/index.ts"] }
+  },
+  "include": ["src"]
+}
